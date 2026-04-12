@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.myself.bank_management_system.dto.BankResponse;
 import com.myself.bank_management_system.dto.CreditDebitRequest;
+import com.myself.bank_management_system.dto.TransferRequest;
 import com.myself.bank_management_system.dto.UserRequest;
 import com.myself.bank_management_system.service.impl.UserService;
 
@@ -28,7 +29,7 @@ public class UserController {
         return userService.createAccount(user);
     }
     
-    @GetMapping("balanceEnquiry/{accountno}")
+    @GetMapping("/balanceEnquiry/{accountno}")
     public BankResponse balanceEnquiry(@PathVariable String accountno){
         return userService.balanceEnquiry(accountno);
     }
@@ -38,15 +39,19 @@ public class UserController {
         return userService.nameEnquiry(accountno);
     }
 
-    @PostMapping("credit")
+    @PostMapping("/credit")
     public BankResponse creditAccount(@RequestBody CreditDebitRequest request){
         return userService.creditAccount(request);
     }
 
     
-    @PostMapping("debit")
+    @PostMapping("/debit")
     public BankResponse debitAccount(@RequestBody CreditDebitRequest request){
         return userService.debitAccount(request);
     }
 
+    @PostMapping("/transfer")
+    public BankResponse transfer(@RequestBody TransferRequest request){
+        return userService.transfer(request);
+    }
 }

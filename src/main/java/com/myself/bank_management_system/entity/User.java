@@ -41,7 +41,7 @@ public class User {
     private BigDecimal accountBalance;
     private String email;
     private String phoneNumber;
-    private String AlternatePhoneNumber;
+    private String alternatePhoneNumber;
     private String status;
     @CreationTimestamp
     private LocalDateTime createdAt;
