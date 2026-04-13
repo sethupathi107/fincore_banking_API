@@ -1,7 +1,8 @@
-package com.myself.bank_management_system.entity;
+package com.myself.FinCoreBankingApiApplication.entity;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -44,7 +45,7 @@ public class User {
     private String alternatePhoneNumber;
     private String status;
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
     @UpdateTimestamp
-    private LocalDateTime modifiedAt;
+    private LocalDate modifiedAt;
 }

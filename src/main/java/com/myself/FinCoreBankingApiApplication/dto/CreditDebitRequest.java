@@ -1,18 +1,15 @@
-package com.myself.bank_management_system.dto;
+package com.myself.FinCoreBankingApiApplication.dto;
 
 import java.math.BigDecimal;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class TransferRequest {
-    private String sourceAccountNumber;
-    private String destinationAccountNumber;
+public class CreditDebitRequest {
+    private String accountNumber;
     private BigDecimal amount;
 }

@@ -1,15 +1,15 @@
-package com.myself.bank_management_system.controller;
+package com.myself.FinCoreBankingApiApplication.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.myself.bank_management_system.dto.BankResponse;
-import com.myself.bank_management_system.dto.CreditDebitRequest;
-import com.myself.bank_management_system.dto.TransferRequest;
-import com.myself.bank_management_system.dto.UserRequest;
-import com.myself.bank_management_system.service.impl.UserService;
+import com.myself.FinCoreBankingApiApplication.dto.BankResponse;
+import com.myself.FinCoreBankingApiApplication.dto.CreditDebitRequest;
+import com.myself.FinCoreBankingApiApplication.dto.TransferRequest;
+import com.myself.FinCoreBankingApiApplication.dto.UserRequest;
+import com.myself.FinCoreBankingApiApplication.service.impl.UserService;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

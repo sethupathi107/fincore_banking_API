@@ -1,4 +1,4 @@
-package com.myself.bank_management_system.dto;
+package com.myself.FinCoreBankingApiApplication.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,9 +1,9 @@
-package com.myself.bank_management_system.service.impl;
+package com.myself.FinCoreBankingApiApplication.service.impl;
 
-import com.myself.bank_management_system.dto.BankResponse;
-import com.myself.bank_management_system.dto.CreditDebitRequest;
-import com.myself.bank_management_system.dto.TransferRequest;
-import com.myself.bank_management_system.dto.UserRequest;
+import com.myself.FinCoreBankingApiApplication.dto.BankResponse;
+import com.myself.FinCoreBankingApiApplication.dto.CreditDebitRequest;
+import com.myself.FinCoreBankingApiApplication.dto.TransferRequest;
+import com.myself.FinCoreBankingApiApplication.dto.UserRequest;
 
 public interface UserService {
     BankResponse createAccount(UserRequest userRequest);

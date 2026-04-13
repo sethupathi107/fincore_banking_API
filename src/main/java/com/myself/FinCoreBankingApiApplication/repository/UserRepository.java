@@ -1,8 +1,8 @@
-package com.myself.bank_management_system.repository;
+package com.myself.FinCoreBankingApiApplication.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.myself.bank_management_system.entity.User;
+import com.myself.FinCoreBankingApiApplication.entity.User;
 
 public interface UserRepository extends JpaRepository<User , Long> {
     Boolean existsByEmail(String email);

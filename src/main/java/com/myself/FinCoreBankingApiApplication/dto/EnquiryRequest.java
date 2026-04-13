@@ -1,6 +1,4 @@
-package com.myself.bank_management_system.dto;
-
-import java.math.BigDecimal;
+package com.myself.FinCoreBankingApiApplication.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AccountInfo {
-    private String accountName;
-    private BigDecimal accountBalance;
+public class EnquiryRequest {
     private String accountNumber;
 }

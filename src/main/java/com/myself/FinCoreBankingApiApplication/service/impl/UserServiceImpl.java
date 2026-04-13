@@ -1,19 +1,22 @@
-package com.myself.bank_management_system.service.impl;
+package com.myself.FinCoreBankingApiApplication.service.impl;
 
 import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.myself.bank_management_system.dto.AccountInfo;
-import com.myself.bank_management_system.dto.BankResponse;
-import com.myself.bank_management_system.dto.CreditDebitRequest;
-import com.myself.bank_management_system.dto.EmailDetails;
-import com.myself.bank_management_system.dto.TransferRequest;
-import com.myself.bank_management_system.dto.UserRequest;
-import com.myself.bank_management_system.entity.User;
-import com.myself.bank_management_system.repository.UserRepository;
-import com.myself.bank_management_system.utils.AccountUtils;
+import com.myself.FinCoreBankingApiApplication.dto.AccountInfo;
+import com.myself.FinCoreBankingApiApplication.dto.BankResponse;
+import com.myself.FinCoreBankingApiApplication.dto.CreditDebitRequest;
+import com.myself.FinCoreBankingApiApplication.dto.EmailDetails;
+import com.myself.FinCoreBankingApiApplication.dto.TransactionDTO;
+import com.myself.FinCoreBankingApiApplication.dto.TransferRequest;
+import com.myself.FinCoreBankingApiApplication.dto.UserRequest;
+import com.myself.FinCoreBankingApiApplication.entity.User;
+import com.myself.FinCoreBankingApiApplication.repository.UserRepository;
+import com.myself.FinCoreBankingApiApplication.utils.AccountUtils;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -23,6 +26,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     EmailService emailService;
+
+    @Autowired
+    TransactionService transactionService;
 
     @Override
     public BankResponse createAccount(UserRequest userRequest) {
@@ -58,7 +64,7 @@ public class UserServiceImpl implements UserService {
                                                     "Account Name : "+newUser.getFirstName()+" "+newUser.getLastName()+" "+newUser.getOtherName()+"\nAccount Number : "+newUser.getAccountNumber()
                                                 )
                                                 .build();
-        // emailService.sendEmailAlert(emailDetails);
+        emailService.sendEmailAlert(emailDetails);
         
         return BankResponse.builder()
                            .responseCode(AccountUtils.ACCOUNT_CREATION_SUCCESS_CODE)
@@ -117,6 +123,23 @@ public class UserServiceImpl implements UserService {
         userToCredit.setAccountBalance(userToCredit.getAccountBalance().add(request.getAmount()));
         userRepository.save(userToCredit);
 
+        TransactionDTO transactionDTO = TransactionDTO.builder()
+        .fromAccountNumber(userToCredit.getAccountNumber())
+        .toAccountNumber("BANK")
+        .transactionType("CREDIT")
+        .amount(request.getAmount())
+        .build();
+
+        transactionService.saveTransaction(transactionDTO);
+
+        EmailDetails creditAlert= EmailDetails.builder()
+        .subject("CREDIT ALERT")
+        .recipient(userToCredit.getEmail())
+        .messageBody("Dear Customer, ₹"+request.getAmount()+" has been Credited to your account. Your current balance is "+userToCredit.getAccountBalance())   
+        .build();
+        
+        emailService.sendEmailAlert(creditAlert);
+
         return BankResponse.builder()
                     .responseCode(AccountUtils.ACCOUNT_CREDITED_SUCCESS_CODE)
                     .responseMessage(AccountUtils.ACCOUNT_CREDITED_SUCCESS_MESSAGE)
@@ -150,6 +173,23 @@ public class UserServiceImpl implements UserService {
         userToDebit.setAccountBalance(userToDebit.getAccountBalance().subtract(request.getAmount()));
         userRepository.save(userToDebit);
 
+        TransactionDTO transactionDTO = TransactionDTO.builder()
+        .fromAccountNumber(userToDebit.getAccountNumber())
+        .toAccountNumber("BANK")
+        .transactionType("DEBIT")
+        .amount(request.getAmount())
+        .build();
+
+        transactionService.saveTransaction(transactionDTO);
+
+        EmailDetails debitAlert= EmailDetails.builder()
+        .subject("CREDIT ALERT")
+        .recipient(userToDebit.getEmail())
+        .messageBody("Dear Customer, ₹"+request.getAmount()+" has been Debited from your account. Your current balance is "+userToDebit.getAccountBalance())   
+        .build();
+        
+        emailService.sendEmailAlert(debitAlert); 
+
         return BankResponse.builder()
                     .responseCode(AccountUtils.ACCOUNT_DEBIT_SUCCESS_CODE)
                     .responseMessage(AccountUtils.ACCOUNT_DEBIT_SUCCESS_MESSAGE)
@@ -162,6 +202,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public BankResponse transfer(TransferRequest request) {
         if(!userRepository.existsByAccountNumber(request.getDestinationAccountNumber())){
             return BankResponse.builder()
@@ -170,7 +211,7 @@ public class UserServiceImpl implements UserService {
             .accountinfo(null) 
             .build();
         }
-        
+
         User userToCredit = userRepository.findByAccountNumber(request.getDestinationAccountNumber());
         User userToDebit = userRepository.findByAccountNumber(request.getSourceAccountNumber());
         String sourseName = userToDebit.getFirstName()+" "+userToDebit.getLastName()+" "+userToDebit.getOtherName();
@@ -204,19 +245,27 @@ public class UserServiceImpl implements UserService {
         
         EmailDetails creditAlert= EmailDetails.builder()
         .subject("CREDIT ALERT")
-        .recipient(userToDebit.getEmail())
-        .messageBody("Dear Customer, ₹"+request.getAmount()+" has been credited to your account from "+sourseName+" (Acct: XXXX"+userToDebit.getAccountNumber().substring(5)+"). Your current balance is ₹10000.00.")   
+        .recipient(userToCredit.getEmail())
+        .messageBody("Dear Customer, ₹"+request.getAmount()+" has been credited to your account from "+sourseName+" (Acct: XXXX"+userToDebit.getAccountNumber().substring(5)+"). Your current balance is "+userToCredit.getAccountBalance())   
         .build();
         
-        //emailService.sendEmailAlert(debitAlert); 
-        //emailService.sendEmailAlert(creditAlert); 
+        emailService.sendEmailAlert(debitAlert); 
+        emailService.sendEmailAlert(creditAlert);
+        
+        TransactionDTO transactionDTO = TransactionDTO.builder()
+        .fromAccountNumber(userToDebit.getAccountNumber())
+        .toAccountNumber(userToCredit.getAccountNumber())
+        .transactionType("TRANSFER")
+        .amount(request.getAmount())
+        .build();
+
+        transactionService.saveTransaction(transactionDTO);
 
         return BankResponse.builder()
                            .responseCode(AccountUtils.TRANSFER_SUCCESSFUL_CODE)
                            .responseMessage(AccountUtils.TRANSFER_SUCCESSFUL_MESSAGE)
                            .accountinfo(null) 
                            .build(); 
-
     }
 
 }

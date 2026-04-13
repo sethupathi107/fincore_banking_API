@@ -1,4 +1,4 @@
-package com.myself.bank_management_system.utils;
+package com.myself.FinCoreBankingApiApplication.utils;
 
 import java.time.Year;
 
