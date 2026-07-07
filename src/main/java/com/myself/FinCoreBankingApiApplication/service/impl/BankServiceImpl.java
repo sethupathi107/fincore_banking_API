@@ -49,9 +49,7 @@ public class BankServiceImpl implements BankService{
         LocalDate start = LocalDate.parse(startDate);
         LocalDate end = LocalDate.parse(endDate);
 
-         List<Transaction> transactionList = transactionRepository.findAll().stream().filter(transaction -> transaction.getFromAccountNumber().equals(accountNumber) || transaction.getToAccountNumber().equals(accountNumber))
-                                                                 .filter(transaction -> transaction.getCreateAt().isAfter(start) && transaction.getCreateAt().isBefore(end.plusDays(1))).toList();
-
+        List<Transaction> transactionList = transactionRepository.findByAccountAndDateRange(accountNumber, start, end);
 
         Rectangle statementSize = new Rectangle(PageSize.A4);
         Document document = new Document(statementSize);

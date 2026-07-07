@@ -3,6 +3,7 @@ package com.myself.FinCoreBankingApiApplication.service.impl;
 import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.myself.FinCoreBankingApiApplication.dto.AccountInfo;
@@ -23,6 +24,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Autowired
     EmailService emailService;
@@ -51,6 +55,7 @@ public class UserServiceImpl implements UserService {
                            .accountNumber(AccountUtils.randomNumberGenerator())
                            .accountBalance(BigDecimal.ZERO)
                            .email(userRequest.getEmail())
+                           .password(passwordEncoder.encode(userRequest.getPassword()))
                            .phoneNumber(userRequest.getPhoneNumber())
                            .alternatePhoneNumber(userRequest.getAlternatePhoneNumber())
                            .status("ACTIVE")

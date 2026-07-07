@@ -1,9 +1,10 @@
 package com.myself.FinCoreBankingApiApplication.utils;
 
-import java.time.Year;
+import java.security.SecureRandom;
 
 public class AccountUtils {
 
+    private static final SecureRandom secureRandom = new SecureRandom();
 
     public static final String ACCOUNT_EXISTS_CODE="001";
     public static final String ACCOUNT_EXISTS_MESSAGE="This user is Already has an Account Created";
@@ -31,8 +32,7 @@ public class AccountUtils {
 
 
     public static String randomNumberGenerator(){
-        String year = String.valueOf(Year.now());
-        String random = String.valueOf((int)Math.floor(Math.random()*1000000));
-        return new StringBuilder().append(year).append(random).toString();
+
+        return String.valueOf(100000 + secureRandom.nextInt(900000));
     }
 }
