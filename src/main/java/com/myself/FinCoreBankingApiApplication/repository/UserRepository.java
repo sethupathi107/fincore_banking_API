@@ -1,6 +1,7 @@
 package com.myself.FinCoreBankingApiApplication.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.myself.FinCoreBankingApiApplication.entity.User;
 
@@ -9,5 +10,5 @@ public interface UserRepository extends JpaRepository<User , Long> {
     Boolean existsByAccountNumber(String accountNumber);
     User findByAccountNumber(String accountNumber);
 
-    java.util.Optional<User> findByEmail(String email);
+    UserDetails findByEmail(String email);
 }
