@@ -24,11 +24,14 @@ import lombok.extern.slf4j.Slf4j;
 
 public class EmailServiceImpl implements EmailService {
 
-    @Autowired
     private JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
     private String SenderEmail;
+
+    public EmailServiceImpl(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
 
     @Override
     public void sendEmailAlert(EmailDetails emailDetails) {

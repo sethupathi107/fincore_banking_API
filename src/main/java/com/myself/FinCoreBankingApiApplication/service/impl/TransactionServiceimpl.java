@@ -1,6 +1,6 @@
 package com.myself.FinCoreBankingApiApplication.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Component;
 
 import com.myself.FinCoreBankingApiApplication.dto.TransactionDTO;
@@ -10,8 +10,11 @@ import com.myself.FinCoreBankingApiApplication.repository.TransactionRepository;
 @Component
 public class TransactionServiceimpl implements TransactionService {
 
-    @Autowired
-    TransactionRepository transactionRepository;
+    private final TransactionRepository transactionRepository;
+
+    public TransactionServiceimpl(TransactionRepository transactionRepository) {
+        this.transactionRepository = transactionRepository;
+    }
 
     @Override
     public void saveTransaction(TransactionDTO transactionDto) {

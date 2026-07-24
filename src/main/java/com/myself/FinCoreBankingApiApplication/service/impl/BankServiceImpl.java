@@ -33,14 +33,15 @@ public class BankServiceImpl implements BankService{
 
     private static final String FILE = "S:\\Learning\\Temp\\statement.pdf";
     
-    @Autowired
     private TransactionRepository transactionRepository;
-
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
     private EmailService emailService;
+
+    public BankServiceImpl(TransactionRepository transactionRepository, UserRepository userRepository, EmailService emailService) {
+        this.transactionRepository = transactionRepository;
+        this.userRepository = userRepository;
+        this.emailService = emailService;
+    }
 
     public void generateStatement(String accountNumber, String startDate, String endDate)
         throws FileNotFoundException, DocumentException {

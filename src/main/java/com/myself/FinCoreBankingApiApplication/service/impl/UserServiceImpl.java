@@ -2,7 +2,6 @@ package com.myself.FinCoreBankingApiApplication.service.impl;
 
 import java.math.BigDecimal;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,20 +21,25 @@ import jakarta.transaction.Transactional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
+    private final TransactionService transactionService;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    EmailService emailService;
-
-    @Autowired
-    TransactionService transactionService;
+    public UserServiceImpl(UserRepository userRepository,
+                           PasswordEncoder passwordEncoder,
+                           EmailService emailService,
+                           TransactionService transactionService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
+        this.transactionService = transactionService;
+    }
 
     @Override
     public BankResponse createAccount(UserRequest userRequest) {
+
+        System.out.println("this is form creating the user");
 
         if(userRepository.existsByEmail(userRequest.getEmail())){
             return BankResponse.builder()
@@ -60,16 +64,19 @@ public class UserServiceImpl implements UserService {
                            .alternatePhoneNumber(userRequest.getAlternatePhoneNumber())
                            .status("ACTIVE")
                            .build();
+        System.out.println("this is afer the file created ");
         User savedUser = userRepository.save(newUser);
-
+        System.out.println("this is afer the file saved ");
+        
         EmailDetails emailDetails = EmailDetails.builder()
-                                                .recipient(savedUser.getEmail())
-                                                .subject("ACCOUNT SUCCESS")
-                                                .messageBody("Congratulations! Your Account has been Successfully Created.\nYour Account Details"+
-                                                    "Account Name : "+newUser.getFirstName()+" "+newUser.getLastName()+" "+newUser.getOtherName()+"\nAccount Number : "+newUser.getAccountNumber()
-                                                )
-                                                .build();
-        emailService.sendEmailAlert(emailDetails);
+        .recipient(savedUser.getEmail())
+        .subject("ACCOUNT SUCCESS")
+        .messageBody("Congratulations! Your Account has been Successfully Created.\nYour Account Details"+
+        "Account Name : "+newUser.getFirstName()+" "+newUser.getLastName()+" "+newUser.getOtherName()+"\nAccount Number : "+newUser.getAccountNumber()
+    )
+    .build();
+    emailService.sendEmailAlert(emailDetails);
+    System.out.println("this is afer the file saved ");
         
         return BankResponse.builder()
                            .responseCode(AccountUtils.ACCOUNT_CREATION_SUCCESS_CODE)
