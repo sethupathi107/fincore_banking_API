@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BankServiceImpl implements BankService{
 
-    private static final String FILE = "S:\\Learning\\Temp\\statement.pdf";
+    private static final String FILE =  System.getProperty("java.io.tmpdir") + "/statement.pdf";
     
     private TransactionRepository transactionRepository;
     private UserRepository userRepository;
